@@ -13,38 +13,40 @@
 
 	</style>
 	<script type="module">
-		fetch('http://localhost:1234/movies')
-		.then(response => response.json())
-		.then(movies => {
-			const html = movies.map(movie => `
-				<article data-id="${movie.id}" class="movie">
-					<h1>${movie.title}</h1>
-					<img src="${movie.poster}" alt="${movie.title}">
-					<p>${movie.year}</p>
+	 fetch('http://localhost:1234/movies')
+      .then(res => res.json())
+      .then(movies => {
+        const html = movies.map(movie => {
+          return `
+            <article data-id="${movie.id}">
+              <h2>${movie.title}</h2>
+              <img src="${movie.poster}" alt="${movie.title}">
+              <p>${movie.year}</p>
 
-					<button>Eliminar</button>
-				</article>
-			`).join('')
+              <button>Eliminar</button>
+            </article>
+          `
+        }).join('')
 
-			document.querySelector('main').innerHTML = html
+        document.querySelector('main').innerHTML = html
 
-			document.addEventListener('click', e => {
-				if(e.target.matches('button')) {
-					const article = e.target.parentElement
-					const id = article.dataset.id
+        document.addEventListener('click', e => {
+          if (e.target.matches('button')) {
+            const article = e.target.closest('article')
+            const id = article.dataset.id
 
-					fetch(`http://localhost:1234/movies/${id}`, {
-						method: 'DELETE'
-					})
-					.then(res => {
-						if (res.ok) {
-							article.remove()
-						}
-					})
-				}
-
-			})
-		})
+            fetch(`http://localhost:1234/movies/${id}`, {
+              method: 'DELETE'
+            })
+              .then(res => {
+                if (res.ok) {
+                  article.remove()
+                }
+              })
+            }
+          
+        })
+      })
 	</script>
 </head>
 <body>
